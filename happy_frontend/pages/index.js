@@ -1,7 +1,56 @@
 import Head from 'next/head'
 import InfoCard from '../components/InfoCard'
+import { useEffect, useRef, useState } from "react";
+import { ethers, providers } from "ethers";
+import Web3Modal from "web3modal";
 
 export default function Home() {
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [numberOfTokens, setNumberOfTokens] = useState(0);
+  const [maximalTokenSuppy, setMaximalTokenSuppy] = useState(0);
+
+  const web3ModalRef = useRef();
+
+  const getProviderSigner = async (isSigner = false) => {
+    const provider = await web3ModalRef.current.connect();
+    const web3Provider = new providers.Web3Provider(provider);
+
+    // Since the Contract lives currently on the Rinkeby test network, make sure user is connected to Rinkeby
+    const { chainId } = await web3Provider.getNetwork();
+    if (chainId !== 4) {
+      console.log(chainId);
+      window.alert("Please connect to the Rinkeby test network");
+      throw new Error("Please change to the Rinkeby test network");
+    }
+
+    if (isSigner) {
+      const signer = web3Provider.getSigner();
+      return signer;
+    }
+
+    return web3Provider;
+  };
+
+  const connectWallet = async () => {
+    try {
+      await getProviderSigner();
+      setWalletConnected(true);
+    } catch(error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if(!walletConnected) {
+      web3ModalRef.current = new Web3Modal({
+        network: "rinkeby",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+      connectWallet();
+    }
+  },[walletConnected]);
+
   return (
     <div className="bg-gradient-to-t from-slate-700 to-gray-900 text-white">
       <Head>
