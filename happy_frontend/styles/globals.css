@@ -6,7 +6,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -17,4 +17,17 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 80px rgb(192 219 255 / 10%), 0 0 32px rgb(65 120 255 / 54%);
+  }
+
+  .gradient-border {
+    border: 2px double transparent;
+    background-image: linear-gradient(rgb(70 72 74), rgb(60 62 64)), radial-gradient(circle at left top, rgb(1, 110, 218), rgb(217, 0, 192));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
 }

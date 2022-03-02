@@ -2,7 +2,7 @@ const InfoCard = (props) => {
     const { info, tokenAmount } = props;
 
     return (
-        <div className="py-8 px-8 max-w-sm mx-auto bg-gray-400/20 rounded-xl space-y-2 sm:py-16 sm:flex sm:items-center sm:space-y-0 sm:space-x-6 shadow-xl shadow-orange-500/10">
+        <div className="py-8 px-8 max-w-sm mx-auto rounded-xl space-y-2 sm:py-16 sm:flex sm:items-center sm:space-y-0 sm:space-x-6 shadow-slate-50/30 gradient-border shadow-inner">
           <div className="text-center space-y-2">
             <div className="space-y-0.5">
               <p className="text-lg text-white font-semibold uppercase">

@@ -8,7 +8,6 @@ async function main() {
   const deployedHappyTokenContract = await happyTokenContract.deploy(
     "Happy Token",
     "HAPPY",
-    100
   );
 
   console.log(
