@@ -8,15 +8,17 @@ import { HAPPY_TOKEN_ADDRESS, abi } from "../constants";
 export default function Home() {
   const zero = BigNumber.from(0);
   const [walletConnected, setWalletConnected] = useState(false);
+  const [amountToMint, setAmountToMint] = useState(0);
   const [numberOfTokens, setNumberOfTokens] = useState(zero);
-  const [maximalTokenSuppy, setMaximalTokenSuppy] = useState(0);
+  const [tokenLiquidity, setTokenLiquidity] = useState(zero);
+  const [maximalTokenSuppy, setMaximalTokenSuppy] = useState(zero);
 
   const web3ModalRef = useRef();
 
   // Mint new Tokens
   const mintTokens = async () => {
     try {
-      const provider = await getProviderSigner();
+      const provider = await getProviderSigner(true);
   
       const contract = new Contract(
         HAPPY_TOKEN_ADDRESS,
@@ -27,9 +29,12 @@ export default function Home() {
       const signer = await getProviderSigner(true);
       const address = await signer.getAddress();
   
-      const tx = await contract.mint(address, ethers.utils.parseEther("1"));
+      const tx = await contract.mint(address, ethers.utils.parseEther(amountToMint.toString()));
   
       await tx.wait();
+
+      await getTokenBalance();
+      await getTokenLiquidity();
     } catch (error) {
       // TODO: Handle error
       console.log(error);
@@ -51,13 +56,39 @@ export default function Home() {
       const address = await signer.getAddress();
 
       const balance = await contract.balanceOf(address);
-      console.log(balance);
       setNumberOfTokens(balance);
     } catch (error) {
       // TODO: Handle error
       console.log(error);
     }
-    
+  };
+
+  // Get Tokens current Liquidity
+  const getTokenLiquidity = async () => {
+    const provider = await getProviderSigner();
+
+    const contract = new Contract(
+      HAPPY_TOKEN_ADDRESS,
+      abi,
+      provider
+    );
+
+    const liquidity = await contract.totalSupply();
+    setTokenLiquidity(liquidity);
+  };
+
+  // Get Maximal Token Supply
+  const getMaximalTokenSupply = async () => {
+    const provider = await getProviderSigner();
+
+    const contract = new Contract(
+      HAPPY_TOKEN_ADDRESS,
+      abi,
+      provider
+    );
+
+    const supply = await contract.maxSupply();
+    setMaximalTokenSuppy(supply);
   };
   
   // Get the Provider or Signer to interact with the Blockchain
@@ -108,6 +139,8 @@ export default function Home() {
       });
       connectWallet();
       getTokenBalance();
+      getTokenLiquidity();
+      getMaximalTokenSupply();
     }
   },[walletConnected]);
 
@@ -122,12 +155,18 @@ export default function Home() {
       <main className="flex flex-col justify-around items-center min-h-screen">
         
         <h1 className="text-9xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-violet-500">Happy Token</h1>
-        <p className="text-4xl text-glow">Mint some Happy Tokens, enjoy life and put on your biggest smile!</p>
-        <button className="px-9 py-5 text-2xl text-orange-600 font-semibold border border-orange-200 hover:text-white hover:bg-orange-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 transition hover:-translate-y-2 duration-300 ease-in-out hover:scale-100">Mint Token</button>
+        <p className="text-4xl text-glow">Mint some <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-violet-500">Happy Tokens</span>, enjoy life and put on your biggest smile!</p>
+        <div className="flex flex-row gap-4">
+          <input type="number" value={amountToMint} onChange={(e) => setAmountToMint(e.target.value)} className="text-4xl w-24 gradient-border shadow-inner" max={10}></input>
+          <button onClick={() => mintTokens(amountToMint)} className="px-9 py-5 text-2xl text-orange-600 font-semibold border border-orange-200 hover:text-white hover:bg-orange-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 transition hover:-translate-y-2 duration-300 ease-in-out hover:scale-100">Mint Token</button>
+        </div>
+        {/* <div className="border-2 border-green-600 py-2 px-2 shadow-inner shadow-slate-400">
+          <p className="text-green-600 text-2xl">Success! Enjoy your Happy Tokens!</p>
+        </div> */}
         <div className="flex flex-row gap-10">
           <InfoCard info="Amount of your Happy Tokens" tokenAmount={utils.formatEther(numberOfTokens) / 1}/>
-          <InfoCard info="Tokens Liquidity" tokenAmount={15}/>
-          <InfoCard info="Maximum of Tokens" tokenAmount={100}/>
+          <InfoCard info="Tokens Liquidity" tokenAmount={utils.formatEther(tokenLiquidity) / 1}/>
+          <InfoCard info="Maximum of Tokens" tokenAmount={utils.formatEther(maximalTokenSuppy) / 1}/>
         </div>
       </main>
 

@@ -8,7 +8,7 @@ contract HappyToken {
     string private name;
     string private symbol;
     uint256 private totalSupplyContract;
-    uint256 private maxSupply = 100 * 10 ** 18;
+    uint256 public maxSupply = 100 * 10 ** 18;
     address private owner;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -19,12 +19,12 @@ contract HappyToken {
         symbol = _symbol;
         owner = msg.sender;
 
-        _mint(msg.sender, 10 * 10 ** 18);
+        mint(msg.sender, 10 * 10 ** 18);
     }
 
     // Custom Methods
 
-    function _mint(address _account, uint256 _amount) private {
+    function mint(address _account, uint256 _amount) public {
         require(_account != address(0), "Address is 0!");
         bool isAboveMaxSuppy = (_amount + totalSupply()) > maxSupply;
         require(!isAboveMaxSuppy, "This would exceed the Max Supply of 100 Happy Tokens!");

@@ -125,7 +125,7 @@ export const abi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "balance",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -136,7 +136,7 @@ export const abi = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "_account",
         "type": "address"
       }
     ],
@@ -149,6 +149,37 @@ export const abi = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -218,4 +249,4 @@ export const abi = [
     "type": "function"
   }
 ];
-export const HAPPY_TOKEN_ADDRESS = "0xD8a71E3d42cE36c4ff4deF17baf5dEb64841391F";
+export const HAPPY_TOKEN_ADDRESS = "0x44b8e40EE0A15f4bdFFb862F67fD820B47F5B9B7";
